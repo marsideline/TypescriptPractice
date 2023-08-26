@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  # アプリケーションの実行環境
+  web:
+    container_name: app
+    build: .
+    ports:
+      - "5173:5173"
+    depends_on:
+      - db
+    working_dir: /usr/app
+    environment:
+      DATABASE_URL: postgres://admin:password@db:5432/mydatabase
+    # 自動ビルド、自動ブラウザリフレッシュのセッティング
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./app:/usr/app
+
+ # データベース環境
+  db:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: mydatabase
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "5432:5432"
